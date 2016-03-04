@@ -20,6 +20,16 @@ float sensorPercentageL; // light
 float sensorPercentageA; // ambience
 float sensorPercentageD; // diffuse
 
+//load arrays
+const int n = 10; //global values stored for averages.
+int lTotal; //light/direct total holder
+int dTotal; // diffuse total holder
+int aTotal; //abience total holder
+
+int i, j; //placeholders
+
+int lightArray[n], diffuseArray[n], ambienceArray[n];
+
 float difference;
 
 int controlDirect = 35; // this is the amount of light received by the sensor as it passed through water; after you subtract the ambient.
@@ -105,8 +115,8 @@ void loop() {
   }
   delay(50);
   digitalWrite(ledLight, LOW);
-  Serial.print("L: ");
-  Serial.println(sensorValue);
+  //Serial.print("L: ");
+  //Serial.println(sensorValue);
   directValue = sensorValue;
   
   //read the diffuse
@@ -127,8 +137,8 @@ void loop() {
   
   delay(50);
   digitalWrite(ledDiffuse, LOW);
-  Serial.print("D: ");
-  Serial.println(sensorValue);
+  //Serial.print("D: ");
+  //Serial.println(sensorValue);
   diffuseValue = sensorValue;
   
   //time for maths!
@@ -152,8 +162,10 @@ void loop() {
   int relativeDirect = controlDirect - directValue;
   int relativeDiffuse = diffuseValue - controlDiffuse;
   
+  
+  
     
-   Serial.println(" ");
+  Serial.println(" ");
    
   Serial.print("R.L: ");
   Serial.println(relativeDirect);
@@ -161,6 +173,28 @@ void loop() {
   Serial.print("R.D: ");
   Serial.println(relativeDiffuse);
   
+  
+  for (i = 0; i < n; i = i + 1) {     //read n values into each total array
+            lightArray[i] = relativeDirect;
+            diffuseArray[i] = relativeDiffuse;
+            ambienceArray[i] = ambientOffset;
+        }
+        
+        //reset all totals
+        
+        lTotal= 0;
+        aTotal = 0;
+        dTotal = 0;
+        
+        for (j = 0; j < n; j = j + 1) {     //summation of the contents of each array into axis Totals
+            pulseXT = pulseXT+pulseX[j];
+            pulseYT = pulseYT+pulseY[j];
+        }
+        pulseXa = pulseXT/n;                //axis average over n
+ 
+        pulseYa = pulseYT/n;                //axis average over n
+  
+  /*
      Serial.println(" ");
   
       if (relativeDiffuse < 0) {
@@ -170,6 +204,7 @@ void loop() {
     if (relativeDirect < 0) {
       Serial.println("Relative direct is measuring clear water");
     };
+    */
   
   /*
   difference = (float)sensorPercentageA - (float)sensorPercentage;
@@ -210,4 +245,3 @@ void loop() {
   */
   delay(2000);
 }
-
