@@ -20,3 +20,4 @@ I plan on updating my work and archiving it here for completedness' sake.
 
 --Mikanwolfe, 02-2019.
 
+If you have any questions, concerns, or simply someone to talk to, email the author at mikanwolfe@nekox.net.
